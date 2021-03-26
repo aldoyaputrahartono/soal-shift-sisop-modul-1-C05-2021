@@ -1,51 +1,49 @@
 #!/bin/bash
 
 #soal a
-#grep -o '[I|E].*' syslog.log
+grep -o '[I|E].*' syslog.log
 
 #soal b
-#grep -o 'E.*' syslog.log | cut -d"(" -f 1 | sort | uniq -c
+grep -o 'E.*' syslog.log | cut -d"(" -f 1 | sort | uniq -c
 
 #soal c
-#echo "Error"
-#grep -o 'E.*' syslog.log | cut --complement -d"(" -f 1 | cut -d")" -f 1 | sort | uniq -c
-#echo "Info"
-#grep -o 'I.*' syslog.log | cut --complement -d"(" -f 1 | cut -d")" -f 1 | sort | uniq -c
+echo "Error"
+grep -o 'E.*' syslog.log | cut --complement -d"(" -f 1 | cut -d")" -f 1 | sort | uniq -c
+echo "Info"
+grep -o 'I.*' syslog.log | cut --complement -d"(" -f 1 | cut -d")" -f 1 | sort | uniq -c
 
 #soal d
-#error=($(grep -o 'E.*' syslog.log | cut --complement -d" " -f 1 | cut -d"(" -f 1 | sort | uniq -c |sort -nr))
-#idx=0
-#
-#for i in ${!error[@]}
-#do
-#	if [[ "${error[$i]}" =~ ^[0-9] ]]
-#	then
-#		angka[$idx]="${error[$i]}"
-#	elif [[ "${error[$i+1]}" =~ ^[0-9] ]]
-#	then
-#		kata[$idx]+="${error[$i]}"
-#		idx=$idx+1
-#	elif (($i+1 == ${#error[@]}))
-#	then
-#		kata[$idx]+="${error[$i]}"
-#	else
-#		kata[$idx]+="${error[$i]} "
-#	fi
-#done
-#
-#
-#printf "Error,Count\n" > "error_message.csv"
-#for i in ${!angka[@]}
-#do
-#	#word="${kata[$i]}"
-#	#number="${angka[$i]}"
-#	printf "%s,%d\n" "${kata[$i]}" "${angka[$i]}" >> "error_message.csv"
-#done
+error=($(grep -o 'E.*' syslog.log | cut --complement -d" " -f 1 | cut -d"(" -f 1 | sort | uniq -c |sort -nr))
+idx=0
+
+for i in ${!error[@]}
+do
+	if [[ "${error[$i]}" =~ ^[0-9] ]]
+	then
+		angka[$idx]="${error[$i]}"
+	elif [[ "${error[$i+1]}" =~ ^[0-9] ]]
+	then
+		kata[$idx]+="${error[$i]}"
+		idx=$idx+1
+	elif (($i+1 == ${#error[@]}))
+	then
+		kata[$idx]+="${error[$i]}"
+	else
+		kata[$idx]+="${error[$i]} "
+	fi
+done
+
+printf "Error,Count\n" > "error_message.csv"
+for i in ${!angka[@]}
+do
+	word="${kata[$i]}"
+	number="${angka[$i]}"
+	printf "%s,%d\n" "${kata[$i]}" "${angka[$i]}" >> "error_message.csv"
+done
 
 #soal e
 error=($(grep -o 'E.*' syslog.log | cut --complement -d"(" -f 1 | cut -d")" -f 1 | sort | uniq -c))
 info=($(grep -o 'I.*' syslog.log | cut --complement -d"(" -f 1 | cut -d")" -f 1 | sort | uniq -c))
-#user=($(grep -o '(.*' syslog.log | cut --complement -d"(" -f 1 | cut -d")" -f 1 | sort | uniq))
 
 idxe=0
 idxi=0
