@@ -243,30 +243,6 @@ END {printf("Transaksi terakhir dengan profit percentage terbesar yaitu %s denga
 
 #
 ### Jawab 2b
-Pada soal ini kita diminta untuk menampilkan daftar nama customer di Albuquerque pada tahun 2017, maka hal pertama yang dilakukan dengan awk sama seperti sebelumnya menggunakan -F "\t" sebagai separator dan pada BEGIN terdapat variabel idx yang nantinya akan digunakan sebagai index.
-```bash
-awk -F"\t" '
-BEGIN {idx=0;}
-```
-Lalu dengan tanda /2017/ sebagai penyeleksi bahwa data yang digunakan hanya yang mengandung '2017'. Jika pada kolom 'city' mengandung kata 'Albuquerque' dan tidak ada nama yang sama pada kolom 'Customer Name' maka nama customer akan disimpan kedalam array.
-```bash
-/2017/ {
-	if($10 == "Albuquerque" && !kembar[$7]){
-		customer[idx] = $7;
-		idx++;
-		kembar[$7] = 1;
-	}
-}
-```
-Langkah terakhir yaitu dengan menampilkan daftar customer yang ada pada array.
-```bash
-END {
-	printf("Daftar nama customer di Albuquerque pada tahun 2017 antara lain:\n");
-	for(i in customer) printf("%s\n",customer[i]);
-	printf("\n");
-}
-' Laporan-TokoShiSop.tsv >> hasil.txt
-```
 
 #
 ### Jawab 2c
@@ -394,3 +370,28 @@ kode diatas berisikan perintah seperti ```zip -rem``` yang berfungsi untuk melak
 
 #
 ### Jawab 3e
+pada soal ini kita diminta untuk membuka zip yang telah kita buat pada waktu tertentu dan menghapus folder zip yang ada,hal pertama yang bisa kita lakukan adalah membuka folder zip menggunakan password denga code:
+```
+#!/bin/bash
+
+tanggal=$(date +"%m%d%Y")
+unzip -P "$tanggal" Koleksi.zip
+```
+pada code diatas kita telah membuka folder zip dengan tanggal yang sebelumnya diisi dengan tanggal saat ini,lalu kita menghapus folder zip tersebut dengan code 
+```
+rm koleksi.zip
+```
+dikarenakan pada soal kita diminta untuk membuat folder zip pada pukul 07:00 setiap hari senin sampai jumat dan melakukan unzip folder pada pukul 18:00 setiap hari senin sampai jumat maka kita bisa menggunakan ```crontab -e``` pada soal 3d dan soal 3e dengan isi:
+```
+#SOAL 3D
+0 7 * * 1-5 bash /home/aldo/Sisop/Modul1/soal3/soal3d.sh
+
+pada 07:00 setiap hari dalam seminggu dari senin sampai jumat
+```
+dan 
+```
+#SOAL 3E
+0 18 * * 1-5 bash /home/aldo/Sisop/Modul1/soal3/soal3e.sh
+
+pada 18:00 setiap hati dalam seminggu dari senin sampai jumat
+```
