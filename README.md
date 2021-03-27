@@ -421,16 +421,27 @@ Kuuhaku adalah orang yang sangat suka mengoleksi foto-foto digital, namun Kuuhak
 
 #
 ### Jawab 3a
-pada soal ini kita diminta untuk mengunduh 23 gambar dari sebuah website dan menyimpan log nya ke dalam file yg sudah dinamakan Foto.log,untuk melakukan hal tersebut kita memasukan
+Pada soal ini kita diminta untuk mengunduh 23 gambar dari sebuah website dan menyimpan log nya ke dalam file yangg sudah dinamakan Foto.log. Pertama, hapus folder Foto.log jika sebelumnya telah ada.
+```bash
+#!/bin/bash
 
-```max_kitten=23;
+curdir=`pwd`
+if [ -f $curdir/Foto.log ]
+then
+	rm $curdir/Foto.log
+fi
+```
+
+Kemudian isi variable max_kitten senilai 23 yang menandakan banyaknya gambar kucing yang akan kita download. Lakukan iterasi dari 1 hingga max_kitten.
+```bash
+max_kitten=23;
 
 for ((i=1; i<=$max_kitten; ))
 ```
 
-lalu kita memastikan tidak ada penamaan file yang double seperti koleksi_12 dan koleksi_012 sekaligus kita mendownload menggunakan `wget`,untuk melakukan hal tersebut kita memasukan
-
-```do
+Sambil mendownload menggunakan `wget`, kita sekaligus mengubah penamaan dari tiap gambar sesuai format `Koleksi_XX` dan memasukkan log download ke file `Foto.log`.
+```bash
+do
 	if [ $i -le 9 ]
 		then
 		wget -O $curdir/Koleksi_0$i.jpg --append-output=$curdir/Foto.log https://loremflickr.com/320/240/kitten
@@ -439,107 +450,118 @@ lalu kita memastikan tidak ada penamaan file yang double seperti koleksi_12 dan 
 	fi	
 ```
 
-setelah itu kita mengecek setiap gambar yang telah di unduh memiliki kesamaan atau tidak dalam variable flag,ketika ada kesamaan maka gambar tersebut akan dilanjutkan ke code yang akan menghapus file tersebut
-
-```flag=0
-location=($(awk '/Location/ {print $2}' $curdir/Foto.log))
+Setelah itu kita mengecek apakah gambar yang barusan didownload memiliki kesamaan dengan setiap gambar yang telah disimpan. Digunakan variable bantuan `flag` dimana jika bernilai 0 berarti tidak ada gambar yang sama dan jika bernilai 1 berarti ada gambar yang sama. Ketika ada kesamaan, maka gambar tersebut akan dilanjutkan ke code yang akan menghapus gambar tersebut.
+```bash
+	flag=0
+	location=($(awk '/Location/ {print $2}' $curdir/Foto.log))
 	for ((j=0; j<${#location[@]}-1; j++))
-		do
+	do
 		if [ "${location[$j]}" == "${location[${#location[@]}-1]}" ]
 		then
-		flag=1
-		break
+			flag=1
+			break
+		fi
+	done
 ```
 
-
-pada code dibawah berisikan code yang mengecek setiap bagian foto yang memiliki gambar yang sama lalu menghapusnya dan mengurangi slot dari 23 foto yang harus dimasukan,jika gambar tidak sama maka akan menambah gambar yang diunduh
-
-```if [ $flag -eq 0 ]
+Berikut aksi yang akan dilakukan sesuai dengan nilai dari variable flag. Jika flag bernilai 0 maka increment i, yang berarti kita tetap menyimpan dan melanjutkan mendownload gambar yang lain. Jika flag bernilai 1 maka hapus gambar yang barusan didownload dan decrement max_kitten karena sesuai permintaan soal, yaitu menghapus gambar yang sama (tidak perlu mengunduh gambar lagi untuk menggantinya). Sehingga setiap ada gambar yang sama maka mengurangi slot 23 gambar yang akan didownload.
+```bash
+	if [ $flag -eq 0 ]
 	then
 		i=$(($i+1))
 	elif [ $i -le 9 ]
-		then
-			rm $curdir/Koleksi_0$i.jpg
-			max_kitten=$(($max_kitten-1))
-		else
+	then
+		rm $curdir/Koleksi_0$i.jpg
+		max_kitten=$(($max_kitten-1))
+	else
 		rm $curdir/Koleksi_$i.jpg
 		max_kitten=$(($max_kitten-1))
+	fi
+done
 ```
-
-untuk gambar gambar tersebut yang telah didownload kita mengganti namanya menjadi koleksi_xx dengan nomor yang berurut.
 
 #
 ### Jawab 3b
-pada soal ini kita diminta untuk melakukan script yang dijalankan pada soal a tetapi dengan penambahan kita diharuskan untuk melakukan pemindahan file tersebut kedalam folder yang bernama tanggal ketika kita mendownload file koleksi tersebut.lalu kita melakukan pendownloadan otomatis pada waktu waktu yang telah ditentukan,untuk melakukan hal tersebut kita memulai dengan:
-```
+Pada soal ini kita diminta untuk melakukan script yang dijalankan pada soal a tetapi dengan penambahan kita diharuskan untuk melakukan pemindahan file tersebut kedalam folder yang bernama tanggal ketika kita mendownload file koleksi tersebut lalu kita melakukan pendownloadan otomatis pada waktu waktu yang telah ditentukan. Untuk melakukan hal tersebut kita memulai dengan:
+```bash
+#!/bin/bash
+
 curdir=`pwd`
 bash $curdir/soal3a.sh
 ```
-kode diatas digunakan untuk menjalankan program pada soal3a,lalu kita membuat folder yang bernamakan tanggal pada hari itu menggunakan perintah ```mkdir``` :
-```
+
+Kode diatas digunakan untuk menjalankan program pada soal3a, lalu kita membuat folder yang bernamakan tanggal pada hari itu menggunakan perintah `mkdir` :
+```bash
 tanggal=$(date +"%d-%m-%Y")
- mkdir "$tanggal"
+mkdir "$tanggal"
 ```
-lalu kita memindahkan file yang sudah didownload beserta log yang sudah disimpan di```foto.log``` kedalam folder yang telah kita buat menggunakan tanggal dengan menggunakan perintah ```mv```:
-```
+
+Lalu kita memindahkan file yang sudah didownload beserta log yang sudah disimpan di `Foto.log` kedalam folder yang telah kita buat menggunakan tanggal dengan menggunakan perintah `mv`:
+```bash
 mv $curdir/Foto.log "$curdir/$tanggal/"
 mv $curdir/Koleksi_* "$curdir/$tanggal/"
 ```
-untuk pendownloadan secara otomatis dengan waktu tertentu kami menggukanan ```crontab -e``` yang berisikan :
-```
+
+Untuk pendownloadan secara otomatis dengan waktu tertentu kami menggukanan `crontab -e` yang berisikan :
+```bash
 0 20 1-31/7,2-31/4 * * bash /home/aldo/Sisop/Modul1/soal3/soal3b.sh
 ```
-crontah diatas bisa dibaca sebagai berikut:
-```
-setiap jam 20:00 malam pada hari ke 7 dari tanggal 1-31
+
+Crontah diatas bisa dibaca sebagai berikut:
+```text
+Setiap jam 20:00 dimulai dari tanggal 1-31 setiap 7 hari sekali
 ```
 dan
-```
-setiap jam 20:00 malam pada hari ke 4 dari tanggal 2-31
+```text
+Setiap jam 20:00 dimulai dari tanggal 2-31 setiap 4 hari sekali
 ```
 
 #
 ### Jawab 3c
 
+
 #
 ### Jawab 3d
-pada soal ini kita diharuskan untuk memasukan folder kelinci dan kucing yang kita buat sebelumnya untuk dimasukan kedalam folder zip menggunakan perintah ```zip -rem```,lalu folder zip tersebut dikunci dan diberikan password dengan isi berupa tanggal saat ini sehingga code tersebut seperti :
-```
+Pada soal ini kita diharuskan untuk memasukan folder kelinci dan kucing yang kita buat sebelumnya ke dalam folder zip menggunakan perintah `zip -rem`, lalu folder zip tersebut dikunci dan diberikan password dengan isi berupa tanggal saat ini sehingga code tersebut seperti :
+```bash
 #!/bin/bash
 
 tanggal=$(date +"%m%d%Y")
 ```
-code diatas berfungsi memasukan tanggal saat ini kedalam variable tanggal untuk dimasukan ke password lalu :
-```
+
+Kode diatas berfungsi memasukan tanggal saat ini (MMDDYYYY) ke dalam variable tanggal untuk dijadikan password pada zip :
+```bash
 zip -rem -P "$tanggal" Koleksi.zip Kelinci_* Kucing_*
 ```
-kode diatas berisikan perintah seperti ```zip -rem``` yang berfungsi untuk melakukan pembuatan folder zip lalu ```-P "$tanggal"``` yang berfungsi sebagai mengisi password zip untuk menjadi tanggal yang telah diisi dengan tanggal saat ini,lalu kita mengganti nama file zip tersebut dengan nama ```koleksi.zip``` dan memasukan folder ```kelinci_* kucing_*``` .
 
+Kode diatas berisikan perintah `zip -rem` yang berfungsi untuk melakukan pembuatan folder zip lalu `-P "$tanggal"` yang berfungsi mengisi password zip dengan variable tanggal yang telah diisi dengan tanggal saat ini, lalu kita mengganti nama file zip tersebut dengan nama `Koleksi.zip` dan memasukkan folder `Kelinci_* Kucing_*`.
 
 #
 ### Jawab 3e
-pada soal ini kita diminta untuk membuka zip yang telah kita buat pada waktu tertentu dan menghapus folder zip yang ada,hal pertama yang bisa kita lakukan adalah membuka folder zip menggunakan password denga code:
-```
+Pada soal ini kita diminta untuk membuka zip yang telah kita buat pada waktu tertentu dan menghapus folder zip yang ada. Hal pertama yang bisa kita lakukan adalah membuka folder zip menggunakan password berupa tanggal folder zip tersebut dibuat:
+```bash
 #!/bin/bash
 
 tanggal=$(date +"%m%d%Y")
 unzip -P "$tanggal" Koleksi.zip
 ```
-pada code diatas kita telah membuka folder zip dengan tanggal yang sebelumnya diisi dengan tanggal saat ini,lalu kita menghapus folder zip tersebut dengan code 
+
+Pada kode di atas kita telah membuka folder zip dengan tanggal yang sebelumnya diisi dengan tanggal saat ini, lalu kita menghapus folder zip tersebut dengan Kode
+```bash
+rm Koleksi.zip
 ```
-rm koleksi.zip
-```
-dikarenakan pada soal kita diminta untuk membuat folder zip pada pukul 07:00 setiap hari senin sampai jumat dan melakukan unzip folder pada pukul 18:00 setiap hari senin sampai jumat maka kita bisa menggunakan ```crontab -e``` pada soal 3d dan soal 3e dengan isi:
-```
+
+Dikarenakan pada soal kita diminta untuk membuat folder zip pada pukul 07:00 setiap hari Senin sampai Jumat dan melakukan unzip folder pada pukul 18:00 setiap hari Senin sampai Jumat maka kita bisa menggunakan `crontab -e` pada soal 3d dan soal 3e dengan isi:
+```bash
 #SOAL 3D
 0 7 * * 1-5 bash /home/aldo/Sisop/Modul1/soal3/soal3d.sh
 
-pada 07:00 setiap hari dalam seminggu dari senin sampai jumat
+Setiap jam 07:00 pada hari Senin sampai Jumat
 ```
 dan 
-```
+```bash
 #SOAL 3E
 0 18 * * 1-5 bash /home/aldo/Sisop/Modul1/soal3/soal3e.sh
 
-pada 18:00 setiap hati dalam seminggu dari senin sampai jumat
+Setiap jam 18:00 pada hari Senin sampai Jumat
 ```
