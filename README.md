@@ -306,6 +306,18 @@ lalu kita memindahkan file yang sudah didownload beserta log yang sudah disimpan
 mv $curdir/Foto.log "$curdir/$tanggal/"
 mv $curdir/Koleksi_* "$curdir/$tanggal/"
 ```
+untuk pendownloadan secara otomatis dengan waktu tertentu kami menggukanan ```crontab -e``` yang berisikan :
+```
+0 20 1-31/7,2-31/4 * * bash /folder path/
+```
+crontah diatas bisa dibaca sebagai berikut:
+```
+setiap jam 20:00 malam pada hari ke 7 dari tanggal 1-31
+```
+dan
+```
+setiap jam 20:00 malam pada hari ke 4 dari tanggal 2-31
+```
 
 #
 ### Jawab 3c
