@@ -308,7 +308,7 @@ mv $curdir/Koleksi_* "$curdir/$tanggal/"
 ```
 untuk pendownloadan secara otomatis dengan waktu tertentu kami menggukanan ```crontab -e``` yang berisikan :
 ```
-0 20 1-31/7,2-31/4 * * bash /folder path/
+0 20 1-31/7,2-31/4 * * bash /home/aldo/Sisop/Modul1/soal3/soal3b.sh
 ```
 crontah diatas bisa dibaca sebagai berikut:
 ```
@@ -324,6 +324,18 @@ setiap jam 20:00 malam pada hari ke 4 dari tanggal 2-31
 
 #
 ### Jawab 3d
+pada soal ini kita diharuskan untuk memasukan folder kelinci dan kucing yang kita buat sebelumnya untuk dimasukan kedalam folder zip menggunakan perintah ```zip -rem```,lalu folder zip tersebut dikunci dan diberikan password dengan isi berupa tanggal saat ini sehingga code tersebut seperti :
+```
+#!/bin/bash
+
+tanggal=$(date +"%m%d%Y")
+```
+code diatas berfungsi memasukan tanggal saat ini kedalam variable tanggal untuk dimasukan ke password lalu :
+```
+zip -rem -P "$tanggal" Koleksi.zip Kelinci_* Kucing_*
+```
+kode diatas berisikan perintah seperti ```zip -rem``` yang berfungsi untuk melakukan pembuatan folder zip lalu ```-P "$tanggal"``` yang berfungsi sebagai mengisi password zip untuk menjadi tanggal yang telah diisi dengan tanggal saat ini,lalu kita mengganti nama file zip tersebut dengan nama ```koleksi.zip``` dan memasukan folder ```kelinci_* kucing_*``` .
+
 
 #
 ### Jawab 3e
