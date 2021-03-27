@@ -242,6 +242,44 @@ Kuuhaku adalah orang yang sangat suka mengoleksi foto-foto digital, namun Kuuhak
 
 #
 ### Jawab 3a
+pada soal ini kita diminta untuk mengunduh 23 gambar dari sebuah website dan menyimpan log nya ke dalam file yg sudah dinamakan Foto.log,untuk melakukan hal tersebut kita memasukan
+`max_kitten=23;
+for ((i=1; i<=$max_kitten; ))`
+lalu kita memastikan tidak ada penamaan file yang double seperti koleksi_12 dan koleksi_012 sekaligus kita mendownload menggunakan `wget`,untuk melakukan hal tersebut kita memasukan
+`
+do
+	if [ $i -le 9 ]
+	then
+		wget -O $curdir/Koleksi_0$i.jpg --append-output=$curdir/Foto.log https://loremflickr.com/320/240/kitten
+	else
+		wget -O $curdir/Koleksi_$i.jpg --append-output=$curdir/Foto.log https://loremflickr.com/320/240/kitten
+	fi`
+setelah itu kita mengecek setiap gambar yang telah di unduh memiliki kesamaan atau tidak dalam variable flag,ketika ada kesamaan maka gambar tersebut akan dilanjutkan ke code yang akan menghapus file tersebut
+`flag=0
+	location=($(awk '/Location/ {print $2}' $curdir/Foto.log))
+	for ((j=0; j<${#location[@]}-1; j++))
+	do
+		if [ "${location[$j]}" == "${location[${#location[@]}-1]}" ]
+		then
+			flag=1
+			break
+			`
+
+pada code dibawah berisikan code yang mengecek setiap bagian foto yang memiliki gambar yang sama lalu menghapusnya dan mengurangi slot dari 23 foto yang harus dimasukan,jika gambar tidak sama maka akan menambah gambar yang diunduh
+`
+if [ $flag -eq 0 ]
+	then
+		i=$(($i+1))
+	elif [ $i -le 9 ]
+	then
+		rm $curdir/Koleksi_0$i.jpg
+		max_kitten=$(($max_kitten-1))
+	else
+		rm $curdir/Koleksi_$i.jpg
+		max_kitten=$(($max_kitten-1))`
+
+
+untuk gambar gambar tersebut yang telah didownload kita mengganti namanya menjadi koleksi_xx dengan nomor yang berurut.
 
 #
 ### Jawab 3b
