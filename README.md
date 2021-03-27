@@ -291,6 +291,21 @@ untuk gambar gambar tersebut yang telah didownload kita mengganti namanya menjad
 
 #
 ### Jawab 3b
+pada soal ini kita diminta untuk melakukan script yang dijalankan pada soal a tetapi dengan penambahan kita diharuskan untuk melakukan pemindahan file tersebut kedalam folder yang bernama tanggal ketika kita mendownload file koleksi tersebut.lalu kita melakukan pendownloadan otomatis pada waktu waktu yang telah ditentukan,untuk melakukan hal tersebut kita memulai dengan:
+```
+curdir=`pwd`
+bash $curdir/soal3a.sh
+```
+kode diatas digunakan untuk menjalankan program pada soal3a,lalu kita membuat folder yang bernamakan tanggal pada hari itu menggunakan perintah ```mkdir``` :
+```
+tanggal=$(date +"%d-%m-%Y")
+ mkdir "$tanggal"
+```
+lalu kita memindahkan file yang sudah didownload beserta log yang sudah disimpan di```foto.log``` kedalam folder yang telah kita buat menggunakan tanggal dengan menggunakan perintah ```mv```:
+```
+mv $curdir/Foto.log "$curdir/$tanggal/"
+mv $curdir/Koleksi_* "$curdir/$tanggal/"
+```
 
 #
 ### Jawab 3c
