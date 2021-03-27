@@ -235,7 +235,7 @@ Selanjutnya pada bagian utama kita akan membuat variabel baru temp_profit untuk 
 	}
 }
 ```
-Untuk langkah terakhir yaitu menampilkan **Row ID** dan **profit percentage terbesar** pada transaksi terakhir dari hasil operasi yang telah dilakukan sebelumnya. 
+Untuk langkah terakhir yaitu menampilkan **Row ID** dan **profit percentage terbesar** pada transaksi terakhir dari hasil operasi yang telah dilakukan sebelumnya  lalu memasukkannya pada file dengan nama ```hasil.txt```.
 ```bash
 END {printf("Transaksi terakhir dengan profit percentage terbesar yaitu %s dengan persentase %.2f%%.\n\n",max_order_id,max_profit);}
 ' Laporan-TokoShiSop.tsv > hasil.txt
@@ -258,7 +258,7 @@ Lalu dengan tanda /2017/ sebagai penyeleksi bahwa data yang digunakan hanya yang
 	}
 }
 ```
-Langkah terakhir yaitu dengan menampilkan daftar customer yang ada pada array.
+Langkah terakhir yaitu dengan menampilkan daftar customer yang ada pada array lalu memasukkannya pada file dengan nama ```hasil.txt```.
 ```bash
 END {
 	printf("Daftar nama customer di Albuquerque pada tahun 2017 antara lain:\n");
@@ -281,7 +281,7 @@ Selanjutnya untuk data yang akan ditampilkan hanya data yang mengandung kata 'Ho
 /Consumer/ {con++}
 /Corporate/ {cor++}
 ```
-Langkah terakhir yaitu dengan menampilkan segmen mana yang jumlah transaksinya paling sedikit dengan membandingkan jumlah tiap segmennya.
+Langkah terakhir yaitu dengan menampilkan segmen mana yang jumlah transaksinya paling sedikit dengan membandingkan jumlah tiap segmennya lalu memasukkannya pada file dengan nama ```hasil.txt```.
 ```bash
 END {
 	printf("Tipe segmen customer yang penjualannya paling sedikit adalah ");
