@@ -518,7 +518,88 @@ Setiap jam 20:00 dimulai dari tanggal 2-31 setiap 4 hari sekali
 
 #
 ### Jawab 3c
+Pada soal ini kita diminta untuk mengunduh 23 gambar dari sebuah website dan menyimpan log nya ke dalam file yangg sudah dinamakan Foto.log. Gambar yang diunduh bergantian tiap harinya antara kucing dan kelinci. Lalu memasukkan semua gambar yang diunduh dan Foto.log ke ke dalam folder "Kucing_(tanggal)" atau "Kelinci_(tanggal)". Pertama, hapus folder Foto.log jika sebelumnya telah ada.
+```bash
+#!/bin/bash
 
+curdir=`pwd`
+if [ -f $curdir/Foto.log ]
+then
+	rm $curdir/Foto.log
+fi
+```
+
+Kemudian dapatkan tanggal hari ini serta tanggal kemarin
+```bash
+sekarang=$(date +"%d-%m-%Y")
+kemarin=$(date -d '-1 day' '+%d-%m-%Y')
+```
+
+Cek apakah kemarin mendownload kelinci. Jika ada maka sekarang mendownload kucing. Jika tidak ada maka sekarang mendownload kelinci.
+```bash
+if [ -d "$Kelinci_$kemarin" ]
+then
+	link="kitten"
+	folder="Kucing_$sekarang"
+else
+	link="bunny"
+	folder="Kelinci_$sekarang"
+fi
+```
+
+Kemudian isi variable max_donlod senilai 23 yang menandakan banyaknya gambar yang akan kita download. Lakukan iterasi dari 1 hingga max_donlod.
+```bash
+max_donlod=23;
+for ((i=1; i<=$max_donlod; ))
+```
+
+Sambil mendownload menggunakan `wget`, kita sekaligus mengubah penamaan dari tiap gambar sesuai format `Koleksi_XX` dan memasukkan log download ke file `Foto.log`.
+```bash
+do
+	if [ $i -le 9 ]
+	then
+		wget -O $curdir/Koleksi_0$i.jpg --append-output=$curdir/Foto.log https://loremflickr.com/320/240/$link
+	else
+		wget -O $curdir/Koleksi_$i.jpg --append-output=$curdir/Foto.log https://loremflickr.com/320/240/$link
+	fi
+```
+
+Setelah itu kita mengecek apakah gambar yang barusan didownload memiliki kesamaan dengan setiap gambar yang telah disimpan. Digunakan variable bantuan `flag` dimana jika bernilai 0 berarti tidak ada gambar yang sama dan jika bernilai 1 berarti ada gambar yang sama. Ketika ada kesamaan, maka gambar tersebut akan dilanjutkan ke code yang akan menghapus gambar tersebut.
+```bash
+	flag=0
+	location=($(awk '/Location/ {print $2}' $curdir/Foto.log))
+	for ((j=0; j<${#location[@]}-1; j++))
+	do
+		if [ "${location[$j]}" == "${location[${#location[@]}-1]}" ]
+		then
+			flag=1
+			break
+		fi
+	done
+```
+
+Berikut aksi yang akan dilakukan sesuai dengan nilai dari variable flag. Jika flag bernilai 0 maka increment i, yang berarti kita tetap menyimpan dan melanjutkan mendownload gambar yang lain. Jika flag bernilai 1 maka hapus gambar yang barusan didownload dan decrement max_donlod karena sesuai permintaan soal, yaitu menghapus gambar yang sama (tidak perlu mengunduh gambar lagi untuk menggantinya). Sehingga setiap ada gambar yang sama maka mengurangi slot 23 gambar yang akan didownload.
+```bash
+	if [ $flag -eq 0 ]
+	then
+		i=$(($i+1))
+	elif [ $i -le 9 ]
+	then
+		rm $curdir/Koleksi_0$i.jpg
+		max_donlod=$(($max_donlod-1))
+	else
+		rm $curdir/Koleksi_$i.jpg
+		max_donlod=$(($max_donlod-1))
+	fi
+done
+```
+
+Buat folder dengan penamaan sesuai format pada soal menggunakan perintah `mkdir` lalu kita memindahkan file yang sudah didownload beserta log yang sudah disimpan di `Foto.log` kedalam folder yang telah kita buat menggunakan perintah `mv`:
+```bash
+mkdir "$folder"
+mv $curdir/Foto.log "$curdir/$folder/"
+mv $curdir/Koleksi_* "$curdir/$folder/"
+```
 
 #
 ### Jawab 3d
