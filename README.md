@@ -270,6 +270,28 @@ END {
 
 #
 ### Jawab 2c
+Pada soal ini kita diminta untuk menampilkan **segment customer** dan **jumlah transaksinya yang paling sedikit**. Seperti biasa kita akan menggunakan awk dengan pendefinisian pada BEGIN yaitu variabel 'hom' sebagai Home Office, 'con' untuk Consumer, dan 'cor' untuk Corporate.
+```bash
+awk -F"\t" '
+BEGIN {hom=0; con=0; cor=0;}
+```
+Selanjutnya untuk data yang akan ditampilkan hanya data yang mengandung kata 'Home Office', 'Consumer' atau 'Corporate' dan akan dihitung jumlah tiap segmennya.
+```bash
+/Home Office/ {hom++}
+/Consumer/ {con++}
+/Corporate/ {cor++}
+```
+Langkah terakhir yaitu dengan menampilkan segmen mana yang jumlah transaksinya paling sedikit dengan membandingkan jumlah tiap segmennya.
+```bash
+END {
+	printf("Tipe segmen customer yang penjualannya paling sedikit adalah ");
+	if(hom < con && hom < cor) printf("Home Office dengan %d transaksi.",hom);
+	if(con < hom && con < cor) printf("Consumer dengan %d transaksi.",con);
+	if(cor < hom && cor < con) printf("Corporate dengan %d transaksi.",cor);
+	printf("\n\n");
+}
+' Laporan-TokoShiSop.tsv >> hasil.txt
+```
 
 #
 ### Jawab 2d
