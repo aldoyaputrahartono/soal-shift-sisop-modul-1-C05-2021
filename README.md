@@ -243,6 +243,30 @@ END {printf("Transaksi terakhir dengan profit percentage terbesar yaitu %s denga
 
 #
 ### Jawab 2b
+Pada soal ini kita diminta untuk menampilkan daftar nama customer di Albuquerque pada tahun 2017, maka hal pertama yang dilakukan dengan awk sama seperti sebelumnya menggunakan -F "\t" sebagai separator dan pada BEGIN terdapat variabel idx yang nantinya akan digunakan sebagai index.
+```bash
+awk -F"\t" '
+BEGIN {idx=0;}
+```
+Lalu dengan tanda /2017/ sebagai penyeleksi bahwa data yang digunakan hanya yang mengandung '2017'. Jika pada kolom 'city' mengandung kata 'Albuquerque' dan tidak ada nama yang sama pada kolom 'Customer Name' maka nama customer akan disimpan kedalam array.
+```bash
+/2017/ {
+	if($10 == "Albuquerque" && !kembar[$7]){
+		customer[idx] = $7;
+		idx++;
+		kembar[$7] = 1;
+	}
+}
+```
+Langkah terakhir yaitu dengan menampilkan daftar customer yang ada pada array.
+```bash
+END {
+	printf("Daftar nama customer di Albuquerque pada tahun 2017 antara lain:\n");
+	for(i in customer) printf("%s\n",customer[i]);
+	printf("\n");
+}
+' Laporan-TokoShiSop.tsv >> hasil.txt
+```
 
 #
 ### Jawab 2c
