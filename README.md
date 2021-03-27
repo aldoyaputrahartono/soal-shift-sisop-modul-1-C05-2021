@@ -275,28 +275,17 @@ location=($(awk '/Location/ {print $2}' $curdir/Foto.log))
 
 pada code dibawah berisikan code yang mengecek setiap bagian foto yang memiliki gambar yang sama lalu menghapusnya dan mengurangi slot dari 23 foto yang harus dimasukan,jika gambar tidak sama maka akan menambah gambar yang diunduh
 
-`
-if [ $flag -eq 0 ]
-
+```if [ $flag -eq 0 ]
 	then
-	
 		i=$(($i+1))
-		
 	elif [ $i -le 9 ]
-	
-	then
-	
-		rm $curdir/Koleksi_0$i.jpg
-		
-		max_kitten=$(($max_kitten-1))
-		
-	else
-	
+		then
+			rm $curdir/Koleksi_0$i.jpg
+			max_kitten=$(($max_kitten-1))
+		else
 		rm $curdir/Koleksi_$i.jpg
-		
 		max_kitten=$(($max_kitten-1))
-
-`
+```
 
 untuk gambar gambar tersebut yang telah didownload kita mengganti namanya menjadi koleksi_xx dengan nomor yang berurut.
 
