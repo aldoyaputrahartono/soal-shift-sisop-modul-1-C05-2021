@@ -209,6 +209,37 @@ Wilayah bagian (region) yang memiliki total keuntungan (profit) yang paling sedi
 
 #
 ### Jawab 2a
+Pada soal ini kita diminta untuk menampilkan informasi berupa **Row ID** dan **profit percentage terbesar**. Hal yang pertama dilakukan yakni dengan menggunakan awk digunakan :
+-F "\t" yang artinya kita mendifinisikan "  " sebagai field separator dari file yang diolah.
+```bash
+awk -F"\t" '
+```
+Lalu pada BEGIN kita inisialisasi variabel max_profit yang nanti akan digunakan sebagai pembanding dan akan ditampilkan di akhir sesi
+```bash
+BEGIN {max_profit=0;}
+```
+Selanjutnya pada bagian utama kita akan membuat variabel baru temp_profit untuk menghitung persentase profit sementara dengan rumus yang ada. Jika profit yang ada pada max_profit sama dengan yang ada pada temp_profit maka kita hanya perlu mengganti **Row ID** nya saja karena yang ditampilkan nanti hanya satu tampilan data dengan **profit percentage terbesar** pada transaksi terakhir. Namun jika nilai profit yang ada pada max_profit lebih kecil daripada temp_profit maka perlu adanya penggantian pada **Row ID** dan **profit percentage terbesar**.
+```bash
+{
+	temp_profit = ($21/($18-$21))*100;
+	if(max_profit == temp_profit){
+		if(max_row_id < $1){
+			max_row_id = $1;
+			max_order_id = $2;
+		}
+	}
+	if(max_profit < temp_profit){
+		max_profit = temp_profit;
+		max_row_id = $1;
+		max_order_id = $2;
+	}
+}
+```
+Untuk langkah terakhir yaitu menampilkan **Row ID** dan **profit percentage terbesar** pada transaksi terakhir dari hasil operasi yang telah dilakukan sebelumnya. 
+```bash
+END {printf("Transaksi terakhir dengan profit percentage terbesar yaitu %s dengan persentase %.2f%%.\n\n",max_order_id,max_profit);}
+' Laporan-TokoShiSop.tsv > hasil.txt
+```
 
 #
 ### Jawab 2b
