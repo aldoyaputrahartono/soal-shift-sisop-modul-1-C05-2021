@@ -295,6 +295,30 @@ END {
 
 #
 ### Jawab 2d
+Pada soal ini kita diminta untuk menampilkan wilayah bagian **(region)** yang memiliki total keuntungan **(profit)** yang paling sedikit dan total keuntungan **(profit)** wilayah tersebut. Tentunya hal pertama yang perlu dilakukan yaitu dengan awk dengan pendefinisian pada BEGIN yaitu variabel 'cen' sebagai Central, 'eas' untuk East, 'sou' sebagai South, dan 'wes' untuk West.
+```bash
+awk -F"\t" '
+BEGIN {cen=0; eas=0; sou=0; wes=0}
+```
+Selanjutnya untuk data yang akan ditampilkan hanya data yang mengandung kata 'Central', 'East', 'South' atau 'West' dan akan dihitung jumlah **(profit)** tiap wilayah bagian **(region)**.
+```bash
+/Central/ {cen+=$21}
+/East/ {eas+=$21}
+/South/ {sou+=$21}
+/West/ {wes+=$21}
+```
+Langkah terakhir yaitu dengan menampilkan wilayah mana yang memiliki total keuntungan **(profit)** yang paling sedikit dengan membandingkan jumlah **(profit)** tiap wilayah bagian **(region)** lalu memasukkannya pada file dengan nama ```hasil.txt```.
+```bash
+END {
+	printf("Wilayah bagian (region) yang memiliki total keuntungan (profit) yang paling sedikit adalah ");
+	if(cen<eas && cen<sou && cen<wes) printf("Central dengan total keuntungan %f",cen);
+	if(eas<cen && eas<sou && eas<wes) printf("Central dengan total keuntungan %f",eas);
+	if(sou<cen && sou<eas && sou<wes) printf("Central dengan total keuntungan %f",sou);
+	if(wes<cen && wes<eas && wes<sou) printf("Central dengan total keuntungan %f",wes);
+	printf("\n");
+}
+' Laporan-TokoShiSop.tsv >> hasil.txt
+```
 
 #
 ### Jawab 2e
