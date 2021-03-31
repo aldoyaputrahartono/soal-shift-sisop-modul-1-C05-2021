@@ -237,7 +237,7 @@ Selanjutnya pada bagian utama kita akan membuat variabel baru temp_profit untuk 
 ```
 Untuk langkah terakhir yaitu menampilkan **Row ID** dan **profit percentage terbesar** pada transaksi terakhir dari hasil operasi yang telah dilakukan sebelumnya  lalu memasukkannya pada file dengan nama ```hasil.txt```.
 ```bash
-END {printf("Transaksi terakhir dengan profit percentage terbesar yaitu %s dengan persentase %.2f%%.\n\n",max_order_id,max_profit);}
+END {printf("Transaksi terakhir dengan profit percentage terbesar yaitu %s dengan persentase %.2f%%.\n\n",max_row_id,max_profit);}
 ' Laporan-TokoShiSop.tsv > hasil.txt
 ```
 
@@ -300,21 +300,23 @@ Pada soal ini kita diminta untuk menampilkan wilayah bagian **(region)** yang me
 awk -F"\t" '
 BEGIN {cen=0; eas=0; sou=0; wes=0}
 ```
-Selanjutnya untuk data yang akan ditampilkan hanya data yang mengandung kata 'Central', 'East', 'South' atau 'West' dan akan dihitung jumlah **(profit)** tiap wilayah bagian **(region)**.
+Selanjutnya untuk data yang akan ditampilkan hanya data yang mengandung kata 'Central', 'East', 'South' atau 'West' pada kolom region dan akan dihitung jumlah **(profit)** tiap wilayah bagian **(region)**.
 ```bash
-/Central/ {cen+=$21}
-/East/ {eas+=$21}
-/South/ {sou+=$21}
-/West/ {wes+=$21}
+{
+	if($13 == "Central") cen+=$21;
+	if($13 == "East") eas+=$21;
+	if($13 == "South") sou+=$21;
+	if($13 == "West") wes+=$21;
+}
 ```
 Langkah terakhir yaitu dengan menampilkan wilayah mana yang memiliki total keuntungan **(profit)** yang paling sedikit dengan membandingkan jumlah **(profit)** tiap wilayah bagian **(region)** lalu memasukkannya pada file dengan nama ```hasil.txt```.
 ```bash
 END {
 	printf("Wilayah bagian (region) yang memiliki total keuntungan (profit) yang paling sedikit adalah ");
 	if(cen<eas && cen<sou && cen<wes) printf("Central dengan total keuntungan %f",cen);
-	if(eas<cen && eas<sou && eas<wes) printf("Central dengan total keuntungan %f",eas);
-	if(sou<cen && sou<eas && sou<wes) printf("Central dengan total keuntungan %f",sou);
-	if(wes<cen && wes<eas && wes<sou) printf("Central dengan total keuntungan %f",wes);
+	if(eas<cen && eas<sou && eas<wes) printf("East dengan total keuntungan %f",eas);
+	if(sou<cen && sou<eas && sou<wes) printf("South dengan total keuntungan %f",sou);
+	if(wes<cen && wes<eas && wes<sou) printf("West dengan total keuntungan %f",wes);
 	printf("\n");
 }
 ' Laporan-TokoShiSop.tsv >> hasil.txt
