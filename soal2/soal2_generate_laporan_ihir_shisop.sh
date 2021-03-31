@@ -17,7 +17,7 @@ BEGIN {max_profit=0;}
 		max_order_id = $2;
 	}
 }
-END {printf("Transaksi terakhir dengan profit percentage terbesar yaitu %s dengan persentase %.2f%%.\n\n",max_order_id,max_profit);}
+END {printf("Transaksi terakhir dengan profit percentage terbesar yaitu %s dengan persentase %.2f%%.\n\n",max_row_id,max_profit);}
 ' Laporan-TokoShiSop.tsv > hasil.txt
 
 #soal b
@@ -55,16 +55,18 @@ END {
 #soal d
 awk -F"\t" '
 BEGIN {cen=0; eas=0; sou=0; wes=0}
-/Central/ {cen+=$21}
-/East/ {eas+=$21}
-/South/ {sou+=$21}
-/West/ {wes+=$21}
+{
+	if($13 == "Central") cen+=$21;
+	if($13 == "East") eas+=$21;
+	if($13 == "South") sou+=$21;
+	if($13 == "West") wes+=$21;
+}
 END {
 	printf("Wilayah bagian (region) yang memiliki total keuntungan (profit) yang paling sedikit adalah ");
 	if(cen<eas && cen<sou && cen<wes) printf("Central dengan total keuntungan %f",cen);
-	if(eas<cen && eas<sou && eas<wes) printf("Central dengan total keuntungan %f",eas);
-	if(sou<cen && sou<eas && sou<wes) printf("Central dengan total keuntungan %f",sou);
-	if(wes<cen && wes<eas && wes<sou) printf("Central dengan total keuntungan %f",wes);
+	if(eas<cen && eas<sou && eas<wes) printf("East dengan total keuntungan %f",eas);
+	if(sou<cen && sou<eas && sou<wes) printf("South dengan total keuntungan %f",sou);
+	if(wes<cen && wes<eas && wes<sou) printf("West dengan total keuntungan %f",wes);
 	printf("\n");
 }
 ' Laporan-TokoShiSop.tsv >> hasil.txt
